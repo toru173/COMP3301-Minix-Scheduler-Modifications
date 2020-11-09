@@ -1,0 +1,42 @@
+#!/bin/bash
+
+VM_NAME="Minix 3.3.0"
+INSTALL_CDROM="./Disk Images/minix_R3.3.0-588a35b.iso"
+DRIVE="./Disk Images/minix_vm.img"
+OPTS=()
+
+# QEMU setup options
+OPTS+=("-name" "$VM_NAME")
+
+# Acceleration
+#OPTS+=("-accel" "hvf")
+
+# Basic Machine Definitions
+OPTS+=("-machine" "pc-i440fx-5.0")
+OPTS+=("-bios" "bios.bin")
+OPTS+=("-m" "64m")
+OPTS+=("-cpu" "pentium")
+OPTS+=("-rtc" "base=localtime")
+
+# Mass Storage
+OPTS+=("-drive" "format=raw,cache=writeback,file=${DRIVE}")
+
+# Removable Storage
+OPTS+=("-drive" "media=cdrom,file=${INSTALL_CDROM}")
+
+# Boot Order
+OPTS+=("-boot" "order=dc")
+#OPTS+=("-boot" "order=c")
+
+# Video
+OPTS+=("-vga" "cirrus")
+
+# Sound
+# Sound is not well supported under Minix
+OPTS+=("-soundhw" "pcspk")
+
+# Networking
+# Limited networking support under Minix, to be added later
+OPTS+=("-nic" "none")
+
+qemu-system-i386 "${OPTS[@]}"
