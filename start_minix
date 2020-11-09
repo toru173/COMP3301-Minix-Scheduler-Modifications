@@ -1,6 +1,7 @@
 #!/bin/bash
 
 VM_NAME="Minix 3.3.0"
+# INSTALL_FLOPPY="./Disk Images/BOOTFLOP.IMG"
 INSTALL_CDROM="./Disk Images/minix_R3.3.0-588a35b.iso"
 DRIVE="./Disk Images/minix_vm.img"
 OPTS=()
@@ -22,11 +23,12 @@ OPTS+=("-rtc" "base=localtime")
 OPTS+=("-drive" "format=raw,cache=writeback,file=${DRIVE}")
 
 # Removable Storage
+# OPTS+=("-drive" "if=floppy,file=${INSTALL_FLOPPY},format=raw")
 OPTS+=("-drive" "media=cdrom,file=${INSTALL_CDROM}")
 
 # Boot Order
-OPTS+=("-boot" "order=dc")
-#OPTS+=("-boot" "order=c")
+# OPTS+=("-boot" "order=dc")
+OPTS+=("-boot" "order=c")
 
 # Video
 OPTS+=("-vga" "cirrus")
@@ -36,7 +38,7 @@ OPTS+=("-vga" "cirrus")
 OPTS+=("-soundhw" "pcspk")
 
 # Networking
-# Limited networking support under Minix, to be added later
-OPTS+=("-nic" "none")
+# Limited networking support under Minix, choose a generic NIC
+OPTS+=("-nic" "user,model=ne2k_pci")
 
 qemu-system-i386 "${OPTS[@]}"
